@@ -41,6 +41,5 @@ switch (action) {
     case 'migrate':
         logger.debug('Migrating database');
         Database.getInstance().migrate();
-        process.exit(0);
         break;
 }

@@ -15,7 +15,14 @@ class Get_User implements Route {
 
         console.log(rows[0]);
 
-        MakeResponse(res, 200, rows[0]);
+        MakeResponse(res, 200, {
+            id: rows[0][0],
+            username: rows[0][1],
+            domain: rows[0][2],
+            avatar: rows[0][3],
+            is_admin: rows[0][4],
+            created_at: rows[0][5]
+        });
     }
 }
 

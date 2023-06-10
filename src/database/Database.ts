@@ -34,8 +34,8 @@ export default class Database {
         return Database.instance;
     }
 
-    migrate (): void {
-        this.client.query(`
+    async migrate () {
+        await this.client.query(`
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
                 username VARCHAR(255) NOT NULL,
@@ -49,19 +49,20 @@ export default class Database {
             );
         `);
 
-        this.client.query(`
+        await this.client.query(`
             CREATE TABLE IF NOT EXISTS communities (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
+                display_name VARCHAR(255) NOT NULL,
                 domain VARCHAR(255) NOT NULL,
                 description VARCHAR(255) NOT NULL,
-                icon VARCHAR(255) NOT NULL,
+                icon VARCHAR(255) NOT NULL DEFAULT 'https://www.gravatar.com/a',
                 created_at TIMESTAMP NOT NULL DEFAULT NOW(),
                 updated_at TIMESTAMP NOT NULL DEFAULT NOW()
             );
         `);
 
-        this.client.query(`
+        await this.client.query(`
             CREATE TABLE IF NOT EXISTS posts (
                 id SERIAL PRIMARY KEY,
                 title VARCHAR(255) NOT NULL,
@@ -76,7 +77,7 @@ export default class Database {
             );
         `);
 
-        this.client.query(`
+        await this.client.query(`
             CREATE TABLE IF NOT EXISTS comments (
                 id SERIAL PRIMARY KEY,
                 content VARCHAR(255) NOT NULL,
@@ -90,7 +91,7 @@ export default class Database {
             );
         `);
 
-        this.client.query(`
+        await this.client.query(`
             CREATE TABLE IF NOT EXISTS upvotes (
                 id SERIAL PRIMARY KEY,
                 post_id INTEGER NOT NULL,
@@ -102,7 +103,20 @@ export default class Database {
             );
         `);
 
-        this.client.query(`
+        await this.client.query(`
+            CREATE TABLE IF NOT EXISTS sessions (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                token VARCHAR(255) NOT NULL,
+                ip VARCHAR(255) NOT NULL,
+                device VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            );
+        `)
+
+        await this.client.query(`
             CREATE TABLE IF NOT EXISTS downvotes (
                 id SERIAL PRIMARY KEY,
                 post_id INTEGER NOT NULL,
@@ -113,6 +127,8 @@ export default class Database {
                 FOREIGN KEY (user_id) REFERENCES users(id)
             );
         `);
+
+        process.exit(0);
     }
 
     async query(sql: string, params?: any[]) {
