@@ -68,7 +68,7 @@ export default class Database {
                 title VARCHAR(255) NOT NULL,
                 content VARCHAR(255) NOT NULL,
                 community_id INTEGER NOT NULL,
-                cross_post_domain VARCHAR(255) NOT NULL,
+                cross_post_domain VARCHAR(255),
                 user_id INTEGER NOT NULL,
                 created_at TIMESTAMP NOT NULL DEFAULT NOW(),
                 updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
