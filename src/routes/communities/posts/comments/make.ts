@@ -18,11 +18,9 @@ class Make_Comment implements Route {
 
         // Make sure user is logged in
         if ((user = await AuthenticationUtils.VerifyCredentials(token || "")) == null) {
-            MakeResponse(res, 401, { message: "You must be logged in to make a post" });
+            MakeResponse(res, 403, { message: "You must be logged in to make a post" });
             return;
         }
-
-        console.log(user)
 
         // Make sure there's all fields present in the request
         if (!content) {

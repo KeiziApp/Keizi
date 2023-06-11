@@ -31,6 +31,9 @@ class Validate implements Route {
             return;
         }
 
+        // Remove nonce from database
+        await Database.getInstance().query('DELETE FROM nonces WHERE nonce = $1', [nonce]);
+
         // Get user from the database stripping password and other sensitive information
         const { rows: userRows } = await Database.getInstance().query('SELECT id, username, domain, avatar, created_at FROM users WHERE username = $1', [rows[0][1]]);
 
