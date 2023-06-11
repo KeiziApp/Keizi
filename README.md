@@ -1,6 +1,7 @@
 # Keizi
 Keizi is a work in progress federated aggregated forums platform, allowing you to host your decentralized aggregated forums, free from overarching administration, constantly changing policies, or unfair moderation.
-It is build to be a base level API compatible with a user-designed (or downloaded) front end, and can communicate between servers seamlessly.
+
+It is built to be a base level API compatible with a user-designed (or downloaded) front end, and can communicate between servers seamlessly.
 
 # API Routing
 All routing related to communities have 3 common API paths:
