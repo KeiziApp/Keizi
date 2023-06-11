@@ -30,7 +30,12 @@ class Downvote_Post implements Route {
             return;
         }
 
-        console.log(user)
+        // Make sure the user hasn't already upvoted
+        const { rows: downvotes } = await Database.getInstance().query('SELECT * FROM downvotes WHERE post_id = $1 AND user_id = $2', [req.params.post, user[0]]);
+        if (downvotes.length > 0) {
+            MakeResponse(res, 400, { message: "You have already downvoted this post" });
+            return;
+        }
 
         // upvote
         Database.getInstance().query('INSERT INTO downvotes (post_id, user_id) VALUES ($1, $2)', [req.params.post, user[0]]);
