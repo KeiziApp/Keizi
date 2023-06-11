@@ -13,6 +13,12 @@ class MakeNonce implements Route {
     public handler = async (req: any, res: any) => {
         const token = req.headers['authorization']
         let user = null;
+        
+        // Make sure there's all fields present in the request
+        if (!req.body.target) {
+            MakeResponse(res, 400, { message: "Missing fields", fields: ["target"].filter((field) => !req.body[field]) });
+            return;
+        }
 
         // Make sure user is logged in
         if (!token || (user = (await SessionUtils.GetUserBySession(token))) == null) {
@@ -22,7 +28,7 @@ class MakeNonce implements Route {
 
         const nonce = crypto.randomBytes(16).toString('hex');
 
-        Database.getInstance().query('INSERT INTO nonces (user_target, target_domain, nonce) VALUES ($1, $2, $3)', [user[1], process.env.SERVER_NAME, nonce]);  
+        Database.getInstance().query('INSERT INTO nonces (user_target, target_domain, nonce) VALUES ($1, $2, $3)', [user[1], req.body.target, nonce]);  
 
         MakeResponse(res, 200, { token: nonce });
     }
