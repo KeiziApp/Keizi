@@ -27,16 +27,25 @@ class Fetch_All_Posts implements Route {
             user_id: rows[0][4],
             created_at: rows[0][5],
             updated_at: rows[0][6],
-            comments: comments.rows.map((comment: any) => {
+            comments: await Promise.all(comments.rows.map(async (comment: any) => {
+                // propagate user data from user_id
+                const { rows } = await Database.getInstance().query('SELECT id, username, domain, avatar FROM users WHERE id = $1', [comment[4]]);
+
                 return {
                     id: comment[0],
                     content: comment[1],
                     post_id: comment[2],
-                    user_id: comment[3],
-                    created_at: comment[4],
-                    updated_at: comment[5]
+                    linked_comment_id: comment[3],
+                    user: {
+                        id: rows[0][0],
+                        username: rows[0][1],
+                        domain: rows[0][2],
+                        avatar: rows[0][3]
+                    },
+                    created_at: comment[5],
+                    updated_at: comment[6]
                 }
-            })
+            }))
         });
     }
 }
