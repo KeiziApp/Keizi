@@ -27,7 +27,6 @@ export default class Database {
 
     static getInstance(): Database {
         if (!Database.instance) {
-            console.log(this.credentials)
             Database.instance = new Database(new Client(this.credentials));
             Database.instance.makeInstance();
         }
