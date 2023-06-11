@@ -12,6 +12,8 @@ import Make_Post from './communities/posts/make'
 import upvote from './communities/posts/upvote'
 import downvote from './communities/posts/downvote'
 import Make_Comment from './communities/posts/comments/make'
+import nonce from './auth/nonce'
+import validate from './auth/validate'
 
 export function Setup (app: any) {
     logger.info('Setting up routes...')
@@ -31,6 +33,8 @@ export function Setup (app: any) {
     app.post(downvote.path, downvote.handler)
     app.post(Login.path, Login.handler);
     app.post(Register.path, Register.handler);
+    app.post(nonce.path, nonce.handler)
+    app.post(validate.path, validate.handler);
     app.post(Make_Community.path, Make_Community.handler);
     app.post(Make_Comment.path, Make_Comment.handler)
 }

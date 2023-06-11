@@ -23,7 +23,6 @@ class Login implements Route {
         await Database.getInstance().query('INSERT INTO sessions (token, user_id, ip, device) VALUES ($1, $2, $3, $4)', [token, rows[0][0], req.ip, req.headers['user-agent']]);
 
         MakeResponse(res, 200, { token: token });
-        Database.getInstance().query('SELECT * FROM users');
     }
 }
 

@@ -4,6 +4,7 @@ import SessionUtils from "../../../../utils/SessionUtils";
 import Route, { MakeResponse } from "../../../Route";
 
 import { config } from "dotenv";
+import AuthenticationUtils from "../../../../utils/AuthenticationUtils";
 config();
 
 class Make_Comment implements Route {
@@ -13,15 +14,15 @@ class Make_Comment implements Route {
     public handler = async (req: Request, res: any) => {
         const { content } = req.body;
         const token = req.headers['authorization']
-        console.log(token)
-
         let user = null;
 
         // Make sure user is logged in
-        if (!token || (user = (await SessionUtils.GetUserBySession(token))) == false) {
+        if ((user = await AuthenticationUtils.VerifyCredentials(token || "")) == null) {
             MakeResponse(res, 401, { message: "You must be logged in to make a post" });
             return;
         }
+
+        console.log(user)
 
         // Make sure there's all fields present in the request
         if (!content) {

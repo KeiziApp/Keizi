@@ -8,7 +8,7 @@ export default class Database {
     private static instance: Database;
     private client: Client;
 
-    static credentials = { 
+    static credentials = {
         host: process.env.POSTGRES_HOST,
         port: Number(process.env.POSTGRES_PORT),
         database: process.env.POSTGRES_DB,
@@ -34,7 +34,7 @@ export default class Database {
         return Database.instance;
     }
 
-    async migrate () {
+    async migrate() {
         await this.client.query(`
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
@@ -126,6 +126,17 @@ export default class Database {
                 FOREIGN KEY (post_id) REFERENCES posts(id),
                 FOREIGN KEY (user_id) REFERENCES users(id)
             );
+        `);
+
+        await this.client.query(`
+                CREATE TABLE IF NOT EXISTS nonces (
+                    id SERIAL PRIMARY KEY,
+                    user_target VARCHAR(255) NOT NULL,
+                    nonce VARCHAR(255) NOT NULL,
+                    target_domain VARCHAR(255) NOT NULL,
+                    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+                    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+                );
         `);
 
         process.exit(0);

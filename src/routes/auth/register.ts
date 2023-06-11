@@ -1,4 +1,4 @@
-import Route from "../Route";
+import Route, { MakeResponse } from "../Route";
 import PasswordUtils from "../../utils/PasswordUtils";
 import Database from "../../database/Database";
 
@@ -15,7 +15,9 @@ class Login implements Route {
 
         Database.getInstance().query('INSERT INTO users (username, domain, email, password) VALUES ($1, $2, $3)', [username, process.env.SERVER_NAME, email, passwordHash]);
 
-        res.json({ message: 'Register' });
+        // TODO; Create token to sign in user
+
+        MakeResponse(res, 200, { message: 'User created.' });
     }
 }
 
