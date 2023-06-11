@@ -11,6 +11,7 @@ import Fetch_Post from './communities/posts/fetch'
 import Make_Post from './communities/posts/make'
 import upvote from './communities/posts/upvote'
 import downvote from './communities/posts/downvote'
+import Make_Comment from './communities/posts/comments/make'
 
 export function Setup (app: any) {
     logger.info('Setting up routes...')
@@ -31,6 +32,7 @@ export function Setup (app: any) {
     app.post(Login.path, Login.handler);
     app.post(Register.path, Register.handler);
     app.post(Make_Community.path, Make_Community.handler);
+    app.post(Make_Comment.path, Make_Comment.handler)
 }
 
 export default {

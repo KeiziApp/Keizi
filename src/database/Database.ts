@@ -82,7 +82,7 @@ export default class Database {
                 id SERIAL PRIMARY KEY,
                 content VARCHAR(255) NOT NULL,
                 post_id INTEGER NOT NULL,
-                linked_comment_id INTEGER NOT NULL,
+                linked_comment_id INTEGER,
                 user_id INTEGER NOT NULL,
                 created_at TIMESTAMP NOT NULL DEFAULT NOW(),
                 updated_at TIMESTAMP NOT NULL DEFAULT NOW(),

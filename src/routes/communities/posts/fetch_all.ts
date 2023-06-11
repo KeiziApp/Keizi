@@ -18,7 +18,10 @@ class Fetch_All_Posts implements Route {
 
         const row = await Database.getInstance().query('SELECT * from posts WHERE community_id = $1', [req.params.id]);
         
-        const rows = row.rows.map((post: any) => {
+        const rows = await Promise.all(row.rows.map(async (post: any) => {
+            // get likes and dislikes
+            post[7] = await Database.getInstance().query('SELECT * FROM upvotes WHERE post_id = $1', [post[0]]);
+            post[8] = await Database.getInstance().query('SELECT * FROM downvotes WHERE post_id = $1', [post[0]]);
             return {
                 id: post[0],
                 title: post[1],
@@ -27,9 +30,11 @@ class Fetch_All_Posts implements Route {
                 cross_posted_domain: post[4],
                 user_id: post[4],
                 created_at: post[5],
-                updated_at: post[6]
+                updated_at: post[6],
+                upvotes: post[7].rows.length,
+                downvotes: post[8].rows.length
             }
-        });
+        }));
 
         MakeResponse(res, 200, rows);
     }
